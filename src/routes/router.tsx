@@ -10,7 +10,7 @@ export const router = createBrowserRouter([
       {
         path: '/',
         element: (
-          <HStack>
+          <HStack pt={'80px'} px={{ base: '16px', md: 0 }}>
             <Button>Click me</Button>
           </HStack>
         ),

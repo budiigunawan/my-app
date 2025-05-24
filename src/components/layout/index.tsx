@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { Outlet } from 'react-router';
+import { Navbar } from './navbar';
 
 export const Layout = () => {
   return (
@@ -9,6 +10,7 @@ export const Layout = () => {
       mx={'auto'}
       minH={{ lg: '824px', base: '700px' }}
     >
+      <Navbar />
       <Outlet />
     </Box>
   );
