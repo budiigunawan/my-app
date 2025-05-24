@@ -31,7 +31,7 @@ export const Navbar = () => {
           <Link to={'/'}>
             <img src={viteLogo} alt="Vite Logo" />
             <Text fontWeight={'bold'} fontSize={'larger'}>
-              MyApp
+              myApp
             </Text>
           </Link>
         </ChakraLink>

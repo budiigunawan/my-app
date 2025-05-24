@@ -16,7 +16,7 @@ import { BiShow, BiHide } from 'react-icons/bi';
 import { Link } from 'react-router';
 
 export const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const togglePasswordElement = (
     <IconButton

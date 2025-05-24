@@ -15,8 +15,9 @@ import { BiShow, BiHide } from 'react-icons/bi';
 import { Link } from 'react-router';
 
 export const Register = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
 
   const togglePasswordElement = (isConfirm: boolean, currentValue: boolean) => {
     return (
