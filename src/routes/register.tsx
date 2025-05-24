@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  Checkbox,
+  //   Checkbox,
   Field,
   Flex,
   IconButton,
@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { BiShow, BiHide } from 'react-icons/bi';
 import { Link } from 'react-router';
 
-export const Login = () => {
+export const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordElement = (
@@ -86,27 +86,45 @@ export const Login = () => {
               {/* <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText> */}
             </Field.Root>
 
-            <Checkbox.Root width={'70%'} my={'8px'}>
+            <Field.Root flexDir={'row'} alignItems={'center'} required>
+              <Field.Label
+                justifyContent={'flex-end'}
+                width={'40%'}
+                gap={0}
+                fontSize={{ md: 'lg', base: 'sm' }}
+              >
+                Confirm Password <Field.RequiredIndicator color={'black'} />
+              </Field.Label>
+              <InputGroup endElement={togglePasswordElement}>
+                <Input
+                  border={'1px solid black'}
+                  type={showPassword ? 'text' : 'password'}
+                />
+              </InputGroup>
+              {/* <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText> */}
+            </Field.Root>
+
+            {/* <Checkbox.Root width={'70%'} my={'8px'}>
               <Checkbox.HiddenInput />
               <Checkbox.Control border={'1px solid black'} />
               <Checkbox.Label>Keep me logged in</Checkbox.Label>
-            </Checkbox.Root>
+            </Checkbox.Root> */}
 
             <Button width={'70%'} type="submit">
-              Login
+              Register
             </Button>
           </Stack>
         </form>
       </Flex>
       <Flex justifyContent={'center'} mt={'32px'} gap={'4px'}>
-        <Text>No account?</Text>
+        <Text>Have account?</Text>
         <ChakraLink
           asChild
           variant={'underline'}
           fontWeight={'medium'}
           textDecorationColor={'black'}
         >
-          <Link to={'/register'}>Register here.</Link>
+          <Link to={'/login'}>Login here.</Link>
         </ChakraLink>
       </Flex>
     </Box>
