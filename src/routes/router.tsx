@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import { Layout } from '@/components/layout';
 import { Button, HStack } from '@chakra-ui/react';
+import { Login } from './login';
 
 export const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ export const router = createBrowserRouter([
             <Button>Click me</Button>
           </HStack>
         ),
+      },
+      {
+        path: '/login',
+        element: <Login />,
       },
     ],
   },
