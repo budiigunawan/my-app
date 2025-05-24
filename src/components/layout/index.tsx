@@ -6,12 +6,17 @@ export const Layout = () => {
   return (
     <Box
       as={'main'}
-      maxW={{ xl: '1152px', lg: '896px', md: '672px' }}
-      mx={'auto'}
-      minH={{ lg: '824px', base: '700px' }}
+      bgSize={'cover'}
+      bgRepeat={'no-repeat'}
+      bgImage={
+        'url(https://ucarecdn.com/7ae9aa34-28c8-496a-a9da-3deb7f40e51f/-/preview/1000x666/)'
+      }
+      minH={'100vh'}
     >
-      <Navbar />
-      <Outlet />
+      <Box maxW={{ xl: '1152px', lg: '896px', md: '672px' }} mx={'auto'}>
+        <Navbar />
+        <Outlet />
+      </Box>
     </Box>
   );
 };
