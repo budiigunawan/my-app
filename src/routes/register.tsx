@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  //   Checkbox,
   Field,
   Flex,
   IconButton,
@@ -17,16 +16,23 @@ import { Link } from 'react-router';
 
 export const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const togglePasswordElement = (
-    <IconButton
-      variant={'ghost'}
-      _hover={{ background: 'transparent' }}
-      onClick={() => setShowPassword(!showPassword)}
-    >
-      {showPassword ? <BiHide /> : <BiShow />}
-    </IconButton>
-  );
+  const togglePasswordElement = (isConfirm: boolean, currentValue: boolean) => {
+    return (
+      <IconButton
+        variant={'ghost'}
+        _hover={{ background: 'transparent' }}
+        onClick={() =>
+          isConfirm
+            ? setShowConfirmPassword(!showConfirmPassword)
+            : setShowPassword(!showPassword)
+        }
+      >
+        {currentValue ? <BiHide /> : <BiShow />}
+      </IconButton>
+    );
+  };
 
   return (
     <Box as={'section'} pt={'220px'} width={{ md: '600px' }} margin={'0 auto'}>
@@ -77,7 +83,9 @@ export const Register = () => {
               >
                 Password <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <InputGroup endElement={togglePasswordElement}>
+              <InputGroup
+                endElement={togglePasswordElement(false, showPassword)}
+              >
                 <Input
                   border={'1px solid black'}
                   type={showPassword ? 'text' : 'password'}
@@ -95,20 +103,16 @@ export const Register = () => {
               >
                 Confirm Password <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <InputGroup endElement={togglePasswordElement}>
+              <InputGroup
+                endElement={togglePasswordElement(true, showConfirmPassword)}
+              >
                 <Input
                   border={'1px solid black'}
-                  type={showPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? 'text' : 'password'}
                 />
               </InputGroup>
               {/* <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText> */}
             </Field.Root>
-
-            {/* <Checkbox.Root width={'70%'} my={'8px'}>
-              <Checkbox.HiddenInput />
-              <Checkbox.Control border={'1px solid black'} />
-              <Checkbox.Label>Keep me logged in</Checkbox.Label>
-            </Checkbox.Root> */}
 
             <Button width={'70%'} type="submit">
               Register
