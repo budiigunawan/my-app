@@ -1,3 +1,4 @@
+import { toaster } from '@/components/ui/toaster';
 import {
   Box,
   Button,
@@ -11,12 +12,28 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
+import axios from 'axios';
 import { useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { useForm } from 'react-hook-form';
 import { BiShow, BiHide } from 'react-icons/bi';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+
+type LoginForm = {
+  email: string;
+  password: string;
+  keepMeLoggedIn: string | boolean;
+};
 
 export const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [_, setCookie] = useCookies(['token']);
+  const navigate = useNavigate();
 
   const togglePasswordElement = (
     <IconButton
@@ -27,6 +44,41 @@ export const Login = () => {
       {showPassword ? <BiHide /> : <BiShow />}
     </IconButton>
   );
+
+  const onSubmit = async (data: LoginForm) => {
+    try {
+      const response = await axios.post(
+        'https://bambino-api.budigunawan.com/auth/login',
+        {
+          email: data.email,
+          password: data.password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        }
+      );
+
+      const token = response.data.token;
+      if (token) {
+        setCookie('token', token, {
+          path: '/',
+          maxAge: data.keepMeLoggedIn === 'on' ? 60 * 60 * 24 * 365 : undefined, // 1 year
+          sameSite: 'lax',
+        });
+
+        navigate('/my-profile'); // redirect after login
+      }
+    } catch (error) {
+      console.error(error);
+      toaster.create({
+        title: 'Email or password incorrect',
+        type: 'error',
+      });
+    }
+  };
 
   return (
     <Box as={'section'} pt={'220px'} width={{ md: '600px' }} margin={'0 auto'}>
@@ -47,7 +99,7 @@ export const Login = () => {
         direction={{ md: 'row-reverse' }}
         justifyContent={{ md: 'normal', base: 'center' }}
       >
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Stack
             width={{ md: '400px' }}
             gap="4"
@@ -62,10 +114,15 @@ export const Login = () => {
                 gap={0}
                 fontSize={{ md: 'lg', base: 'sm' }}
               >
-                User ID <Field.RequiredIndicator color={'black'} />
+                Email
+                <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <Input border={'1px solid black'} />
-              {/* <Field.ErrorText>{errors.firstName?.message}</Field.ErrorText> */}
+              <Input
+                {...register('email', { required: 'Email is required' })}
+                border={'1px solid black'}
+                type="email"
+              />
+              <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
             </Field.Root>
 
             <Field.Root flexDir={'row'} alignItems={'center'} required>
@@ -79,14 +136,21 @@ export const Login = () => {
               </Field.Label>
               <InputGroup endElement={togglePasswordElement}>
                 <Input
+                  {...register('password', {
+                    required: 'Password is required',
+                  })}
                   border={'1px solid black'}
                   type={showPassword ? 'text' : 'password'}
                 />
               </InputGroup>
-              {/* <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText> */}
+              <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
             </Field.Root>
 
-            <Checkbox.Root width={'70%'} my={'8px'}>
+            <Checkbox.Root
+              width={'70%'}
+              my={'8px'}
+              {...register('keepMeLoggedIn')}
+            >
               <Checkbox.HiddenInput />
               <Checkbox.Control border={'1px solid black'} />
               <Checkbox.Label>Keep me logged in</Checkbox.Label>
