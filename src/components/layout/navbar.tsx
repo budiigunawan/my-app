@@ -8,13 +8,19 @@ import {
   Portal,
 } from '@chakra-ui/react';
 import viteLogo from '/vite.svg';
-import { Link, useLocation } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { useCookies } from 'react-cookie';
 
 export const Navbar = () => {
-  // TODO: CHANGE TO ISAUTHENTICATED
-  const location = useLocation();
-  const isHide = ['/login', '/register'].includes(location.pathname);
+  const [cookies, _, removeCookies] = useCookies(['token']);
+  const isAuthenticated = !!cookies.token;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    removeCookies('token', { path: '/' });
+    navigate('/login');
+  };
 
   return (
     <Box position={'fixed'} top={0} width={'100%'} zIndex={10}>
@@ -30,14 +36,14 @@ export const Navbar = () => {
           _hover={{ textDecoration: 'none' }}
           _focus={{ outline: 'none' }}
         >
-          <Link to={'/'}>
+          <Link to={'/home'}>
             <img src={viteLogo} alt="Vite Logo" />
             <Text fontWeight={'bold'} fontSize={'larger'}>
               myApp
             </Text>
           </Link>
         </ChakraLink>
-        {!isHide && (
+        {isAuthenticated && (
           <Menu.Root>
             <Menu.Trigger _focus={{ outline: 'none' }}>
               <Button as={'div'} variant="ghost" size="xl">
@@ -56,7 +62,9 @@ export const Navbar = () => {
                   <Menu.Item value="edit-profile" asChild>
                     <Link to={'/edit-profile'}>Edit Profile</Link>
                   </Menu.Item>
-                  <Menu.Item value="logout">Logout</Menu.Item>
+                  <Menu.Item value="logout" onClick={handleLogout}>
+                    Logout
+                  </Menu.Item>
                 </Menu.Content>
               </Menu.Positioner>
             </Portal>

@@ -1,4 +1,4 @@
-import { toaster } from '@/components/ui/toaster';
+import { toaster, Toaster } from '@/components/ui/toaster';
 import {
   Box,
   Button,
@@ -32,6 +32,7 @@ export const Login = () => {
     formState: { errors },
   } = useForm<LoginForm>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [_, setCookie] = useCookies(['token']);
   const navigate = useNavigate();
 
@@ -47,6 +48,7 @@ export const Login = () => {
 
   const onSubmit = async (data: LoginForm) => {
     try {
+      setIsLoading(true);
       const response = await axios.post(
         'https://bambino-api.budigunawan.com/auth/login',
         {
@@ -65,18 +67,22 @@ export const Login = () => {
       if (token) {
         setCookie('token', token, {
           path: '/',
-          maxAge: data.keepMeLoggedIn === 'on' ? 60 * 60 * 24 * 365 : undefined, // 1 year
+          maxAge:
+            // 1 year if true, 1 day if false
+            data.keepMeLoggedIn === 'on' ? 60 * 60 * 24 * 365 : 60 * 60 * 24,
           sameSite: 'lax',
         });
 
-        navigate('/my-profile'); // redirect after login
+        navigate('/my-profile');
       }
     } catch (error) {
       console.error(error);
       toaster.create({
-        title: 'Email or password incorrect',
+        title: 'Your email and/or password does not match',
         type: 'error',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -156,7 +162,7 @@ export const Login = () => {
               <Checkbox.Label>Keep me logged in</Checkbox.Label>
             </Checkbox.Root>
 
-            <Button width={'70%'} type="submit">
+            <Button width={'70%'} type="submit" loading={isLoading}>
               Login
             </Button>
           </Stack>
@@ -173,6 +179,7 @@ export const Login = () => {
           <Link to={'/register'}>Register here.</Link>
         </ChakraLink>
       </Flex>
+      <Toaster />
     </Box>
   );
 };
