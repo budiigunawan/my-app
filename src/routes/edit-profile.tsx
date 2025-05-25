@@ -49,13 +49,21 @@ export const EditProfile = () => {
       >
         <Tabs.List width={isMobile ? '100%' : '25%'}>
           <Separator />
-          <Tabs.Trigger value="basic">Basic Details</Tabs.Trigger>
+          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="basic">
+            Basic Details
+          </Tabs.Trigger>
           <Separator />
-          <Tabs.Trigger value="additional">Additional Details</Tabs.Trigger>
+          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="additional">
+            Additional Details
+          </Tabs.Trigger>
           <Separator />
-          <Tabs.Trigger value="spouse">Spouse Details</Tabs.Trigger>
+          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="spouse">
+            Spouse Details
+          </Tabs.Trigger>
           <Separator />
-          <Tabs.Trigger value="preferences">Personal Preferences</Tabs.Trigger>
+          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="preferences">
+            Personal Preferences
+          </Tabs.Trigger>
           <Separator />
           <Tabs.Indicator
             rounded="none"

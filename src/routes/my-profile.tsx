@@ -10,6 +10,8 @@ import {
   useBreakpointValue,
   Field,
   Input,
+  Wrap,
+  Badge,
 } from '@chakra-ui/react';
 import { IoPersonSharp } from 'react-icons/io5';
 import { RiBallPenFill } from 'react-icons/ri';
@@ -17,6 +19,10 @@ import { Link } from 'react-router';
 
 export const MyProfile = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const selectedHobbies = ['Traveling', 'Reading'];
+  const selectedSports = ['Badminton', 'Football'];
+  const selectedMusicGenres = ['Pop', 'Jazz', 'Rock'];
+  const selectedMovies = ['Spiderman 1', 'Spiderman 2', 'Spiderman 3'];
 
   return (
     <Box as={'section'} pt={'80px'}>
@@ -50,13 +56,21 @@ export const MyProfile = () => {
       >
         <Tabs.List width={isMobile ? '100%' : '25%'}>
           <Separator />
-          <Tabs.Trigger value="basic">Basic Details</Tabs.Trigger>
+          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="basic">
+            Basic Details
+          </Tabs.Trigger>
           <Separator />
-          <Tabs.Trigger value="additional">Additional Details</Tabs.Trigger>
+          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="additional">
+            Additional Details
+          </Tabs.Trigger>
           <Separator />
-          <Tabs.Trigger value="spouse">Spouse Details</Tabs.Trigger>
+          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="spouse">
+            Spouse Details
+          </Tabs.Trigger>
           <Separator />
-          <Tabs.Trigger value="preferences">Personal Preferences</Tabs.Trigger>
+          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="preferences">
+            Personal Preferences
+          </Tabs.Trigger>
           <Separator />
           <Tabs.Indicator
             rounded="none"
@@ -162,26 +176,41 @@ export const MyProfile = () => {
               <Field.Label fontWeight={'bold'}>
                 Hobbies and interests
               </Field.Label>
-              {/* TODO: CHANGE TO COMBOBOX */}
-              <Input variant={'flushed'} border={0} value={'Traveling'} />
+              <Wrap gap={'2'}>
+                {selectedHobbies.map((skill) => (
+                  <Badge key={skill}>{skill}</Badge>
+                ))}
+              </Wrap>
             </Field.Root>
             <Field.Root>
               <Field.Label
                 fontWeight={'bold'}
               >{`Favorite sport(s)`}</Field.Label>
-              <Input variant={'flushed'} border={0} value={'Badminton'} />
+              <Wrap gap={'2'}>
+                {selectedSports.map((skill) => (
+                  <Badge key={skill}>{skill}</Badge>
+                ))}
+              </Wrap>
             </Field.Root>
             <Field.Root>
               <Field.Label
                 fontWeight={'bold'}
               >{`Preferred music genre(s)`}</Field.Label>
-              <Input variant={'flushed'} border={0} value={'Pop'} />
+              <Wrap gap={'2'}>
+                {selectedMusicGenres.map((skill) => (
+                  <Badge key={skill}>{skill}</Badge>
+                ))}
+              </Wrap>
             </Field.Root>
             <Field.Root>
               <Field.Label
                 fontWeight={'bold'}
               >{`Preferred movie/TV show(s)`}</Field.Label>
-              <Input variant={'flushed'} border={0} value={'Pop'} />
+              <Wrap gap={'2'}>
+                {selectedMovies.map((skill) => (
+                  <Badge key={skill}>{skill}</Badge>
+                ))}
+              </Wrap>
             </Field.Root>
           </Stack>
         </Tabs.Content>
