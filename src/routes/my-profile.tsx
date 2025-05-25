@@ -1,6 +1,11 @@
 import {
+  AdditionalDetails,
+  BasicDetails,
+  PreferencesDetails,
+  SpouseDetails,
+} from '@/components/my-profile';
+import {
   Box,
-  Flex,
   HStack,
   Link as ChakraLink,
   Separator,
@@ -8,21 +13,44 @@ import {
   Tabs,
   Text,
   useBreakpointValue,
-  Field,
-  Input,
-  Wrap,
-  Badge,
 } from '@chakra-ui/react';
-import { IoPersonSharp } from 'react-icons/io5';
+import React from 'react';
 import { RiBallPenFill } from 'react-icons/ri';
 import { Link } from 'react-router';
 
 export const MyProfile = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const selectedHobbies = ['Traveling', 'Reading'];
-  const selectedSports = ['Badminton', 'Football'];
-  const selectedMusicGenres = ['Pop', 'Jazz', 'Rock'];
-  const selectedMovies = ['Spiderman 1', 'Spiderman 2', 'Spiderman 3'];
+  const preferencesData = {
+    selectedHobbies: ['Traveling', 'Reading'],
+    selectedSports: ['Badminton', 'Football'],
+    selectedMusicGenres: ['Pop', 'Jazz', 'Rock'],
+    selectedMovies: ['Spiderman 1', 'Spiderman 2', 'Spiderman 3'],
+  };
+
+  const tabsList = [
+    {
+      title: 'Basic',
+      value: 'basic',
+      content: <BasicDetails isMobile={isMobile} />,
+    },
+    {
+      title: 'Additional Details',
+      value: 'additional',
+      content: <AdditionalDetails isMobile={isMobile} />,
+    },
+    {
+      title: 'Spouse Details',
+      value: 'spouse',
+      content: <SpouseDetails isMobile={isMobile} />,
+    },
+    {
+      title: 'Personal Preferences',
+      value: 'preferences',
+      content: (
+        <PreferencesDetails data={preferencesData} isMobile={isMobile} />
+      ),
+    },
+  ];
 
   return (
     <Box as={'section'} pt={'80px'}>
@@ -54,24 +82,20 @@ export const MyProfile = () => {
         variant="plain"
         gap={isMobile ? '0' : '5%'}
       >
-        <Tabs.List width={isMobile ? '100%' : '25%'}>
+        <Tabs.List width={isMobile ? '100%' : '25%'} p={isMobile ? 4 : 0}>
           <Separator />
-          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="basic">
-            Basic Details
-          </Tabs.Trigger>
-          <Separator />
-          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="additional">
-            Additional Details
-          </Tabs.Trigger>
-          <Separator />
-          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="spouse">
-            Spouse Details
-          </Tabs.Trigger>
-          <Separator />
-          <Tabs.Trigger _selected={{ fontWeight: 'bold' }} value="preferences">
-            Personal Preferences
-          </Tabs.Trigger>
-          <Separator />
+          {tabsList.map((tabs) => (
+            <React.Fragment key={tabs.value}>
+              <Tabs.Trigger
+                py={{ base: '32px', md: '8px' }}
+                _selected={{ fontWeight: 'bold' }}
+                value={tabs.value}
+              >
+                {tabs.title}
+              </Tabs.Trigger>
+              <Separator />
+            </React.Fragment>
+          ))}
           <Tabs.Indicator
             rounded="none"
             backgroundColor={'transparent'}
@@ -80,140 +104,11 @@ export const MyProfile = () => {
           />
           <Separator />
         </Tabs.List>
-        <Tabs.Content p={0} value="basic">
-          <Flex gap={'40px'}>
-            <IoPersonSharp size={'8em'} />
-            <Stack>
-              <Field.Root required>
-                <Field.Label fontWeight={'bold'}>
-                  Salutation <Field.RequiredIndicator color={'black'} />
-                </Field.Label>
-                <Input variant={'flushed'} border={0} value={'Mr.'} />
-              </Field.Root>
-              <Field.Root required>
-                <Field.Label fontWeight={'bold'}>
-                  Salutation <Field.RequiredIndicator color={'black'} />
-                </Field.Label>
-                <Input variant={'flushed'} border={0} value={'John'} />
-              </Field.Root>
-              <Field.Root required>
-                <Field.Label fontWeight={'bold'}>
-                  Last name <Field.RequiredIndicator color={'black'} />
-                </Field.Label>
-                <Input variant={'flushed'} border={0} value={'Doe Jr.'} />
-              </Field.Root>
-              <Field.Root required>
-                <Field.Label fontWeight={'bold'}>
-                  Email address <Field.RequiredIndicator color={'black'} />
-                </Field.Label>
-                <Input
-                  variant={'flushed'}
-                  border={0}
-                  value={'johndoe@anyemail.com'}
-                />
-              </Field.Root>
-            </Stack>
-          </Flex>
-        </Tabs.Content>
-        <Tabs.Content p={0} value="additional">
-          <Stack>
-            <Field.Root required>
-              <Field.Label fontWeight={'bold'}>
-                Home address <Field.RequiredIndicator color={'black'} />
-              </Field.Label>
-              <Input variant={'flushed'} border={0} value={'Sesame Street'} />
-            </Field.Root>
-            <Field.Root required>
-              <Field.Label fontWeight={'bold'}>
-                Country <Field.RequiredIndicator color={'black'} />
-              </Field.Label>
-              <Input variant={'flushed'} border={0} value={'Indonesia'} />
-            </Field.Root>
-            <Field.Root required>
-              <Field.Label fontWeight={'bold'}>
-                Postal code <Field.RequiredIndicator color={'black'} />
-              </Field.Label>
-              <Input variant={'flushed'} border={0} value={'53257'} />
-            </Field.Root>
-            <Field.Root>
-              <Field.Label fontWeight={'bold'}>Date of birth</Field.Label>
-              <Input
-                type="date"
-                variant={'flushed'}
-                border={0}
-                value={'1996-07-31'}
-              />
-            </Field.Root>
-            <Field.Root>
-              <Field.Label fontWeight={'bold'}>Gender</Field.Label>
-              <Input variant={'flushed'} border={0} value={'Male'} />
-            </Field.Root>
-            <Field.Root>
-              <Field.Label fontWeight={'bold'}>Marital status</Field.Label>
-              <Input variant={'flushed'} border={0} value={'Married'} />
-            </Field.Root>
-          </Stack>
-        </Tabs.Content>
-        <Tabs.Content p={0} value="spouse">
-          <Stack>
-            <Field.Root>
-              <Field.Label fontWeight={'bold'}>Salutation</Field.Label>
-              <Input variant={'flushed'} border={0} value={'Mrs.'} />
-            </Field.Root>
-            <Field.Root>
-              <Field.Label fontWeight={'bold'}>Salutation</Field.Label>
-              <Input variant={'flushed'} border={0} value={'Dita'} />
-            </Field.Root>
-            <Field.Root>
-              <Field.Label fontWeight={'bold'}>Last name</Field.Label>
-              <Input variant={'flushed'} border={0} value={'Gunawan'} />
-            </Field.Root>
-          </Stack>
-        </Tabs.Content>
-        <Tabs.Content p={0} value="preferences">
-          <Stack>
-            <Field.Root>
-              <Field.Label fontWeight={'bold'}>
-                Hobbies and interests
-              </Field.Label>
-              <Wrap gap={'2'}>
-                {selectedHobbies.map((skill) => (
-                  <Badge key={skill}>{skill}</Badge>
-                ))}
-              </Wrap>
-            </Field.Root>
-            <Field.Root>
-              <Field.Label
-                fontWeight={'bold'}
-              >{`Favorite sport(s)`}</Field.Label>
-              <Wrap gap={'2'}>
-                {selectedSports.map((skill) => (
-                  <Badge key={skill}>{skill}</Badge>
-                ))}
-              </Wrap>
-            </Field.Root>
-            <Field.Root>
-              <Field.Label
-                fontWeight={'bold'}
-              >{`Preferred music genre(s)`}</Field.Label>
-              <Wrap gap={'2'}>
-                {selectedMusicGenres.map((skill) => (
-                  <Badge key={skill}>{skill}</Badge>
-                ))}
-              </Wrap>
-            </Field.Root>
-            <Field.Root>
-              <Field.Label
-                fontWeight={'bold'}
-              >{`Preferred movie/TV show(s)`}</Field.Label>
-              <Wrap gap={'2'}>
-                {selectedMovies.map((skill) => (
-                  <Badge key={skill}>{skill}</Badge>
-                ))}
-              </Wrap>
-            </Field.Root>
-          </Stack>
-        </Tabs.Content>
+        {tabsList.map((tabs) => (
+          <Tabs.Content p={0} value={tabs.value} key={`${tabs.value}-content`}>
+            {tabs.content}
+          </Tabs.Content>
+        ))}
       </Tabs.Root>
     </Box>
   );
