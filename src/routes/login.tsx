@@ -113,7 +113,12 @@ export const Login = () => {
             mt={'40px'}
             alignItems={{ base: 'flex-end' }}
           >
-            <Field.Root flexDir={'row'} alignItems={'center'} required>
+            <Field.Root
+              flexDir={'row'}
+              alignItems={'center'}
+              invalid={!!errors.email}
+              required
+            >
               <Field.Label
                 justifyContent={'flex-end'}
                 width={'40%'}
@@ -123,15 +128,24 @@ export const Login = () => {
                 Email
                 <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <Input
-                {...register('email', { required: 'Email is required' })}
-                border={'1px solid black'}
-                type="email"
-              />
-              <Field.ErrorText>{errors.email?.message}</Field.ErrorText>
+              <Flex flexDirection={'column'} width={'100%'}>
+                <Input
+                  {...register('email', { required: 'Email is required' })}
+                  border={'1px solid black'}
+                  type="email"
+                />
+                <Field.ErrorText mt={1}>
+                  {errors.email?.message}
+                </Field.ErrorText>
+              </Flex>
             </Field.Root>
 
-            <Field.Root flexDir={'row'} alignItems={'center'} required>
+            <Field.Root
+              flexDir={'row'}
+              alignItems={'center'}
+              invalid={!!errors.password}
+              required
+            >
               <Field.Label
                 justifyContent={'flex-end'}
                 width={'40%'}
@@ -140,16 +154,24 @@ export const Login = () => {
               >
                 Password <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <InputGroup endElement={togglePasswordElement}>
-                <Input
-                  {...register('password', {
-                    required: 'Password is required',
-                  })}
-                  border={'1px solid black'}
-                  type={showPassword ? 'text' : 'password'}
-                />
-              </InputGroup>
-              <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
+              <Flex flexDirection={'column'} width={'100%'}>
+                <InputGroup endElement={togglePasswordElement}>
+                  <Input
+                    {...register('password', {
+                      required: 'Password is required',
+                      minLength: {
+                        value: 6,
+                        message: 'Password must be at least 6 characters',
+                      },
+                    })}
+                    border={'1px solid black'}
+                    type={showPassword ? 'text' : 'password'}
+                  />
+                </InputGroup>
+                <Field.ErrorText mt={1}>
+                  {errors.password?.message}
+                </Field.ErrorText>
+              </Flex>
             </Field.Root>
 
             <Checkbox.Root
