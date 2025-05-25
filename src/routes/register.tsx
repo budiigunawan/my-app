@@ -37,6 +37,10 @@ export const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
   const navigate = useNavigate();
+  const username = watch('username');
+  const email = watch('email');
+  const password = watch('password');
+  const confirmPassword = watch('confirmPassword');
 
   const togglePasswordElement = (isConfirm: boolean, currentValue: boolean) => {
     return (
@@ -239,7 +243,12 @@ export const Register = () => {
               </Flex>
             </Field.Root>
 
-            <Button width={'70%'} type="submit" loading={isLoading}>
+            <Button
+              width={'70%'}
+              type="submit"
+              loading={isLoading}
+              disabled={!username || !email || !password || !confirmPassword}
+            >
               Register
             </Button>
           </Stack>

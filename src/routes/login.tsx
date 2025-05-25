@@ -29,12 +29,15 @@ export const Login = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<LoginForm>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [_, setCookie] = useCookies(['token']);
   const navigate = useNavigate();
+  const email = watch('email');
+  const password = watch('password');
 
   const togglePasswordElement = (
     <IconButton
@@ -184,7 +187,12 @@ export const Login = () => {
               <Checkbox.Label>Keep me logged in</Checkbox.Label>
             </Checkbox.Root>
 
-            <Button width={'70%'} type="submit" loading={isLoading}>
+            <Button
+              width={'70%'}
+              type="submit"
+              loading={isLoading}
+              disabled={!email || !password}
+            >
               Login
             </Button>
           </Stack>
