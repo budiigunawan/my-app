@@ -8,11 +8,13 @@ import {
   Portal,
 } from '@chakra-ui/react';
 import viteLogo from '/vite.svg';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { GiHamburgerMenu } from 'react-icons/gi';
 
 export const Navbar = () => {
-  const isAuthenticated = false;
+  // TODO: CHANGE TO ISAUTHENTICATED
+  const location = useLocation();
+  const isHide = ['/login', '/register'].includes(location.pathname);
 
   return (
     <Box position={'fixed'} top={0} width={'100%'} zIndex={10}>
@@ -35,17 +37,26 @@ export const Navbar = () => {
             </Text>
           </Link>
         </ChakraLink>
-        {isAuthenticated && (
+        {!isHide && (
           <Menu.Root>
             <Menu.Trigger _focus={{ outline: 'none' }}>
-              <Button variant="outline" size="sm">
+              <Button as={'div'} variant="ghost" size="xl">
                 <GiHamburgerMenu />
               </Button>
             </Menu.Trigger>
             <Portal>
               <Menu.Positioner>
                 <Menu.Content>
-                  <Menu.Item value="rename">Logout</Menu.Item>
+                  <Menu.Item value="home" asChild>
+                    <Link to={'/'}>Home</Link>
+                  </Menu.Item>
+                  <Menu.Item value="my-profile" asChild>
+                    <Link to={'/my-profile'}>My Profile</Link>
+                  </Menu.Item>
+                  <Menu.Item value="edit-profile" asChild>
+                    <Link to={'/edit-profile'}>Edit Profile</Link>
+                  </Menu.Item>
+                  <Menu.Item value="logout">Logout</Menu.Item>
                 </Menu.Content>
               </Menu.Positioner>
             </Portal>
