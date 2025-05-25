@@ -1,3 +1,4 @@
+import { toaster, Toaster } from '@/components/ui/toaster';
 import {
   Box,
   Button,
@@ -10,14 +11,32 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
+import axios from 'axios';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { BiShow, BiHide } from 'react-icons/bi';
+import { useNavigate } from 'react-router';
 import { Link } from 'react-router';
 
+type RegisterForm = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 export const Register = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<RegisterForm>();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
+  const navigate = useNavigate();
 
   const togglePasswordElement = (isConfirm: boolean, currentValue: boolean) => {
     return (
@@ -33,6 +52,43 @@ export const Register = () => {
         {currentValue ? <BiHide /> : <BiShow />}
       </IconButton>
     );
+  };
+
+  const onSubmit = async (data: RegisterForm) => {
+    try {
+      setIsLoading(true);
+      await axios.post(
+        'https://bambino-api.budigunawan.com/auth/register',
+        {
+          username: data.username,
+          email: data.email,
+          password: data.password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        }
+      );
+      toaster.create({
+        title: 'Account created',
+        type: 'success',
+        onStatusChange({ status }) {
+          if (status === 'unmounted') {
+            navigate('/login');
+          }
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      toaster.create({
+        title: 'Registration failed',
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -54,7 +110,7 @@ export const Register = () => {
         direction={{ md: 'row-reverse' }}
         justifyContent={{ md: 'normal', base: 'center' }}
       >
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Stack
             width={{ md: '400px' }}
             gap="4"
@@ -62,20 +118,64 @@ export const Register = () => {
             mt={'40px'}
             alignItems={{ base: 'flex-end' }}
           >
-            <Field.Root flexDir={'row'} alignItems={'center'} required>
+            <Field.Root flexDir={'row'} invalid={!!errors.username} required>
               <Field.Label
                 justifyContent={'flex-end'}
                 width={'40%'}
                 gap={0}
                 fontSize={{ md: 'lg', base: 'sm' }}
               >
-                User ID <Field.RequiredIndicator color={'black'} />
+                Username <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <Input border={'1px solid black'} />
-              {/* <Field.ErrorText>{errors.firstName?.message}</Field.ErrorText> */}
+              <Flex flexDirection={'column'} width={'100%'}>
+                <Input
+                  {...register('username', {
+                    required: 'Username is required',
+                    minLength: {
+                      value: 6,
+                      message: 'Username must be at least 6 characters',
+                    },
+                  })}
+                  border={'1px solid black'}
+                />
+                <Field.ErrorText mt={1}>
+                  {errors.username?.message}
+                </Field.ErrorText>
+              </Flex>
             </Field.Root>
 
-            <Field.Root flexDir={'row'} alignItems={'center'} required>
+            <Field.Root
+              flexDir={'row'}
+              alignItems={'center'}
+              invalid={!!errors.email}
+              required
+            >
+              <Field.Label
+                justifyContent={'flex-end'}
+                width={'40%'}
+                gap={0}
+                fontSize={{ md: 'lg', base: 'sm' }}
+              >
+                Email <Field.RequiredIndicator color={'black'} />
+              </Field.Label>
+              <Flex flexDirection={'column'} width={'100%'}>
+                <Input
+                  {...register('email', { required: 'Email is required' })}
+                  border={'1px solid black'}
+                  type="email"
+                />
+                <Field.ErrorText mt={1}>
+                  {errors.email?.message}
+                </Field.ErrorText>
+              </Flex>
+            </Field.Root>
+
+            <Field.Root
+              flexDir={'row'}
+              alignItems={'center'}
+              invalid={!!errors.password}
+              required
+            >
               <Field.Label
                 justifyContent={'flex-end'}
                 width={'40%'}
@@ -84,18 +184,34 @@ export const Register = () => {
               >
                 Password <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <InputGroup
-                endElement={togglePasswordElement(false, showPassword)}
-              >
-                <Input
-                  border={'1px solid black'}
-                  type={showPassword ? 'text' : 'password'}
-                />
-              </InputGroup>
-              {/* <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText> */}
+              <Flex flexDirection={'column'} width={'100%'}>
+                <InputGroup
+                  endElement={togglePasswordElement(false, showPassword)}
+                >
+                  <Input
+                    {...register('password', {
+                      required: 'Password is required',
+                      minLength: {
+                        value: 6,
+                        message: 'Password must be at least 6 characters',
+                      },
+                    })}
+                    border={'1px solid black'}
+                    type={showPassword ? 'text' : 'password'}
+                  />
+                </InputGroup>
+                <Field.ErrorText mt={1}>
+                  {errors.password?.message}
+                </Field.ErrorText>
+              </Flex>
             </Field.Root>
 
-            <Field.Root flexDir={'row'} alignItems={'center'} required>
+            <Field.Root
+              flexDir={'row'}
+              alignItems={'center'}
+              invalid={!!errors.confirmPassword}
+              required
+            >
               <Field.Label
                 justifyContent={'flex-end'}
                 width={'40%'}
@@ -104,18 +220,26 @@ export const Register = () => {
               >
                 Confirm Password <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <InputGroup
-                endElement={togglePasswordElement(true, showConfirmPassword)}
-              >
-                <Input
-                  border={'1px solid black'}
-                  type={showConfirmPassword ? 'text' : 'password'}
-                />
-              </InputGroup>
-              {/* <Field.ErrorText>{errors.lastName?.message}</Field.ErrorText> */}
+              <Flex flexDirection={'column'} width={'100%'}>
+                <InputGroup
+                  endElement={togglePasswordElement(true, showConfirmPassword)}
+                >
+                  <Input
+                    {...register('confirmPassword', {
+                      validate: (val) =>
+                        val === watch('password') || 'Password does not match',
+                    })}
+                    border={'1px solid black'}
+                    type={showConfirmPassword ? 'text' : 'password'}
+                  />
+                </InputGroup>
+                <Field.ErrorText mt={1}>
+                  {errors.confirmPassword?.message}
+                </Field.ErrorText>
+              </Flex>
             </Field.Root>
 
-            <Button width={'70%'} type="submit">
+            <Button width={'70%'} type="submit" loading={isLoading}>
               Register
             </Button>
           </Stack>
@@ -132,6 +256,7 @@ export const Register = () => {
           <Link to={'/login'}>Login here.</Link>
         </ChakraLink>
       </Flex>
+      <Toaster />
     </Box>
   );
 };
