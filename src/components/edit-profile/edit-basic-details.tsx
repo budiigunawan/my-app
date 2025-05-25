@@ -1,5 +1,6 @@
 import { Flex, Stack, Field, Input, Box } from '@chakra-ui/react';
 import { IoPersonSharp } from 'react-icons/io5';
+import { ImageUpload } from './image-upload';
 
 type EditBasicDetailsProps = {
   isMobile?: boolean;
@@ -14,6 +15,7 @@ export const EditBasicDetails = ({ isMobile }: EditBasicDetailsProps) => {
     >
       <Box margin={'0 auto'}>
         <IoPersonSharp size={'8em'} />
+        <ImageUpload />
       </Box>
       <Stack>
         <Field.Root required>
