@@ -54,7 +54,7 @@ export const Navbar = () => {
               <Menu.Positioner>
                 <Menu.Content>
                   <Menu.Item value="home" asChild>
-                    <Link to={'/'}>Home</Link>
+                    <Link to={'/home'}>Home</Link>
                   </Menu.Item>
                   <Menu.Item value="my-profile" asChild>
                     <Link to={'/my-profile'}>My Profile</Link>

@@ -1,8 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import { Layout } from '@/components/layout';
-import { HStack } from '@chakra-ui/react';
 import { ProtectedRoute } from '@/components/layout/protected-route';
-import { EditProfile, Login, MyProfile, Register } from './index';
+import { EditProfile, Home, Login, MyProfile, Register } from './index';
 
 export const router = createBrowserRouter([
   {
@@ -14,11 +13,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: '/home',
-            element: (
-              <HStack pt={'80px'} px={{ base: '16px', md: 0 }}>
-                <h1>Home</h1>
-              </HStack>
-            ),
+            element: <Home />,
           },
           {
             path: '/my-profile',
