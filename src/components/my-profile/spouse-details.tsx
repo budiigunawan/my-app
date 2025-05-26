@@ -15,6 +15,7 @@ export const SpouseDetails = ({ isMobile, data }: SpouseDetailsProps) => {
           variant={'flushed'}
           border={0}
           defaultValue={data.spouseSalutation}
+          readOnly
         />
       </Field.Root>
       <Field.Root>
@@ -23,6 +24,7 @@ export const SpouseDetails = ({ isMobile, data }: SpouseDetailsProps) => {
           variant={'flushed'}
           border={0}
           defaultValue={data.spouseFirstName}
+          readOnly
         />
       </Field.Root>
       <Field.Root>
@@ -31,6 +33,7 @@ export const SpouseDetails = ({ isMobile, data }: SpouseDetailsProps) => {
           variant={'flushed'}
           border={0}
           defaultValue={data.spouseLastName}
+          readOnly
         />
       </Field.Root>
     </Stack>

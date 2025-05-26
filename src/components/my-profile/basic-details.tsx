@@ -26,19 +26,30 @@ export const BasicDetails = ({ isMobile, data }: BasicDetailsProps) => {
             variant={'flushed'}
             border={0}
             defaultValue={data.salutation}
+            readOnly
           />
         </Field.Root>
         <Field.Root required>
           <Field.Label fontWeight={'bold'}>
             First name <Field.RequiredIndicator color={'black'} />
           </Field.Label>
-          <Input variant={'flushed'} border={0} defaultValue={data.firstName} />
+          <Input
+            variant={'flushed'}
+            border={0}
+            defaultValue={data.firstName}
+            readOnly
+          />
         </Field.Root>
         <Field.Root required>
           <Field.Label fontWeight={'bold'}>
             Last name <Field.RequiredIndicator color={'black'} />
           </Field.Label>
-          <Input variant={'flushed'} border={0} defaultValue={data.lastName} />
+          <Input
+            variant={'flushed'}
+            border={0}
+            defaultValue={data.lastName}
+            readOnly
+          />
         </Field.Root>
         <Field.Root required>
           <Field.Label fontWeight={'bold'}>
@@ -48,6 +59,7 @@ export const BasicDetails = ({ isMobile, data }: BasicDetailsProps) => {
             variant={'flushed'}
             border={0}
             defaultValue={data.user.email}
+            readOnly
           />
         </Field.Root>
       </Stack>

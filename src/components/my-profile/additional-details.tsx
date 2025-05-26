@@ -10,25 +10,42 @@ export const AdditionalDetails = ({
   isMobile,
   data,
 }: AdditionalDetailsProps) => {
+  console.log(data.dateOfBirth, 'dob');
+
   return (
     <Stack p={isMobile ? '16px' : 0}>
       <Field.Root required>
         <Field.Label fontWeight={'bold'}>
           Home address <Field.RequiredIndicator color={'black'} />
         </Field.Label>
-        <Input variant={'flushed'} border={0} defaultValue={data.address} />
+        <Input
+          variant={'flushed'}
+          border={0}
+          defaultValue={data.address}
+          readOnly
+        />
       </Field.Root>
       <Field.Root required>
         <Field.Label fontWeight={'bold'}>
           Country <Field.RequiredIndicator color={'black'} />
         </Field.Label>
-        <Input variant={'flushed'} border={0} defaultValue={data.country} />
+        <Input
+          variant={'flushed'}
+          border={0}
+          defaultValue={data.country}
+          readOnly
+        />
       </Field.Root>
       <Field.Root required>
         <Field.Label fontWeight={'bold'}>
           Postal code <Field.RequiredIndicator color={'black'} />
         </Field.Label>
-        <Input variant={'flushed'} border={0} defaultValue={data.postalCode} />
+        <Input
+          variant={'flushed'}
+          border={0}
+          defaultValue={data.postalCode}
+          readOnly
+        />
       </Field.Root>
       <Field.Root>
         <Field.Label fontWeight={'bold'}>Date of birth</Field.Label>
@@ -36,12 +53,18 @@ export const AdditionalDetails = ({
           type="date"
           variant={'flushed'}
           border={0}
-          defaultValue={data.dateOfBirth}
+          defaultValue={data.dateOfBirth ? data.dateOfBirth.slice(0, 10) : ''}
+          readOnly
         />
       </Field.Root>
       <Field.Root>
         <Field.Label fontWeight={'bold'}>Gender</Field.Label>
-        <Input variant={'flushed'} border={0} defaultValue={data.gender} />
+        <Input
+          variant={'flushed'}
+          border={0}
+          defaultValue={data.gender}
+          readOnly
+        />
       </Field.Root>
       <Field.Root>
         <Field.Label fontWeight={'bold'}>Marital status</Field.Label>
@@ -49,6 +72,7 @@ export const AdditionalDetails = ({
           variant={'flushed'}
           border={0}
           defaultValue={data.maritalStatus}
+          readOnly
         />
       </Field.Root>
     </Stack>
