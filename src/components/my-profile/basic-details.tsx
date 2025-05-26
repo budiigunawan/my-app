@@ -1,11 +1,13 @@
+import type { ProfileData } from '@/lib/types';
 import { Flex, Stack, Field, Input, Box } from '@chakra-ui/react';
 import { IoPersonSharp } from 'react-icons/io5';
 
 type BasicDetailsProps = {
   isMobile?: boolean;
+  data: ProfileData;
 };
 
-export const BasicDetails = ({ isMobile }: BasicDetailsProps) => {
+export const BasicDetails = ({ isMobile, data }: BasicDetailsProps) => {
   return (
     <Flex
       gap={isMobile ? '20px' : '40px'}
@@ -20,19 +22,23 @@ export const BasicDetails = ({ isMobile }: BasicDetailsProps) => {
           <Field.Label fontWeight={'bold'}>
             Salutation <Field.RequiredIndicator color={'black'} />
           </Field.Label>
-          <Input variant={'flushed'} border={0} defaultValue={'Mr.'} />
+          <Input
+            variant={'flushed'}
+            border={0}
+            defaultValue={data.salutation}
+          />
         </Field.Root>
         <Field.Root required>
           <Field.Label fontWeight={'bold'}>
-            Salutation <Field.RequiredIndicator color={'black'} />
+            First name <Field.RequiredIndicator color={'black'} />
           </Field.Label>
-          <Input variant={'flushed'} border={0} defaultValue={'John'} />
+          <Input variant={'flushed'} border={0} defaultValue={data.firstName} />
         </Field.Root>
         <Field.Root required>
           <Field.Label fontWeight={'bold'}>
             Last name <Field.RequiredIndicator color={'black'} />
           </Field.Label>
-          <Input variant={'flushed'} border={0} defaultValue={'Doe Jr.'} />
+          <Input variant={'flushed'} border={0} defaultValue={data.lastName} />
         </Field.Root>
         <Field.Root required>
           <Field.Label fontWeight={'bold'}>
@@ -41,7 +47,7 @@ export const BasicDetails = ({ isMobile }: BasicDetailsProps) => {
           <Input
             variant={'flushed'}
             border={0}
-            defaultValue={'johndoe@anyemail.com'}
+            defaultValue={data.user.email}
           />
         </Field.Root>
       </Stack>

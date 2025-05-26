@@ -4,6 +4,7 @@ import {
   PreferencesDetails,
   SpouseDetails,
 } from '@/components/my-profile';
+import type { ProfileData } from '@/lib/types';
 import {
   Box,
   HStack,
@@ -14,43 +15,104 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { RiBallPenFill } from 'react-icons/ri';
 import { Link } from 'react-router';
 
+const defaultValue = {
+  id: '',
+  salutation: '',
+  firstName: '',
+  lastName: '',
+  address: '',
+  country: '',
+  postalCode: '',
+  dateOfBirth: '',
+  gender: '',
+  maritalStatus: '',
+  spouseSalutation: '',
+  spouseFirstName: '',
+  spouseLastName: '',
+  hobbies: '',
+  sports: '',
+  musics: '',
+  movies: '',
+  userId: '',
+  user: {
+    email: '',
+    username: '',
+  },
+};
+
 export const MyProfile = () => {
+  const [cookies] = useCookies(['token']);
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const preferencesData = {
-    selectedHobbies: ['Traveling', 'Reading'],
-    selectedSports: ['Badminton', 'Football'],
-    selectedMusicGenres: ['Pop', 'Jazz', 'Rock'],
-    selectedMovies: ['Spiderman 1', 'Spiderman 2', 'Spiderman 3'],
-  };
+  const [profileData, setProfileData] = useState<ProfileData>(defaultValue);
 
   const tabsList = [
     {
       title: 'Basic',
       value: 'basic',
-      content: <BasicDetails isMobile={isMobile} />,
+      content: <BasicDetails isMobile={isMobile} data={profileData} />,
     },
     {
       title: 'Additional Details',
       value: 'additional',
-      content: <AdditionalDetails isMobile={isMobile} />,
+      content: <AdditionalDetails isMobile={isMobile} data={profileData} />,
     },
     {
       title: 'Spouse Details',
       value: 'spouse',
-      content: <SpouseDetails isMobile={isMobile} />,
+      content: <SpouseDetails isMobile={isMobile} data={profileData} />,
     },
     {
       title: 'Personal Preferences',
       value: 'preferences',
-      content: (
-        <PreferencesDetails data={preferencesData} isMobile={isMobile} />
-      ),
+      content: <PreferencesDetails data={profileData} isMobile={isMobile} />,
     },
   ];
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const res = await fetch('https://bambino-api.budigunawan.com/profile', {
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        });
+
+        const data = await res.json();
+
+        if (data.profile) {
+          setProfileData(data.profile);
+        } else {
+          const response = await fetch(
+            'https://bambino-api.budigunawan.com/auth/me',
+            {
+              headers: {
+                Authorization: `Bearer ${cookies.token}`,
+              },
+            }
+          );
+
+          const authData = await response.json();
+          const userData = authData.user;
+          setProfileData({
+            ...profileData,
+            user: {
+              email: userData.email,
+              username: userData.username,
+            },
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchProfileData();
+  }, [cookies.token]);
 
   return (
     <Box as={'section'} pt={'80px'}>
