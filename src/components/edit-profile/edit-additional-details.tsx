@@ -34,12 +34,14 @@ type AdditionalDetailsForm = {
 
 type EditAdditionalDetailsProps = {
   isMobile?: boolean;
+  isNewProfile: boolean;
   data: ProfileData;
   revalidateProfileData: () => {};
 };
 
 export const EditAdditionalDetails = ({
   isMobile,
+  isNewProfile,
   data,
   revalidateProfileData,
 }: EditAdditionalDetailsProps) => {
@@ -80,12 +82,16 @@ export const EditAdditionalDetails = ({
         gender: formData.gender?.value,
         maritalStatus: formData.maritalStatus?.value,
       };
-      await axios.put('https://bambino-api.budigunawan.com/profile', payload, {
+
+      await axios({
+        method: isNewProfile ? 'post' : 'put',
+        url: 'https://bambino-api.budigunawan.com/profile',
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${cookies.token}`,
           'Content-Type': 'application/json',
         },
+        data: payload,
       });
 
       toaster.create({
@@ -114,7 +120,7 @@ export const EditAdditionalDetails = ({
         address: data.address || '',
         country: data.country || '',
         postalCode: data.postalCode || '',
-        dateOfBirth: data.dateOfBirth.slice(0, 10) || '',
+        dateOfBirth: data?.dateOfBirth?.slice(0, 10) || '',
         gender: {
           value: data.gender ?? '',
           label: data.gender ?? '',

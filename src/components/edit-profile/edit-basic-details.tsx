@@ -30,12 +30,14 @@ type BasicDetailsForm = {
 
 type EditBasicDetailsProps = {
   isMobile?: boolean;
+  isNewProfile: boolean;
   data: ProfileData;
   revalidateProfileData: () => {};
 };
 
 export const EditBasicDetails = ({
   isMobile,
+  isNewProfile,
   data,
   revalidateProfileData,
 }: EditBasicDetailsProps) => {
@@ -71,12 +73,16 @@ export const EditBasicDetails = ({
         firstName: formData.firstName,
         lastName: formData.lastName,
       };
-      await axios.put('https://bambino-api.budigunawan.com/profile', payload, {
+
+      await axios({
+        method: isNewProfile ? 'post' : 'put',
+        url: 'https://bambino-api.budigunawan.com/profile',
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${cookies.token}`,
           'Content-Type': 'application/json',
         },
+        data: payload,
       });
 
       toaster.create({

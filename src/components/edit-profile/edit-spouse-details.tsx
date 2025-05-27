@@ -19,12 +19,14 @@ type SpouseDetailsForm = {
 
 type EditSpouseDetailsProps = {
   isMobile?: boolean;
+  isNewProfile: boolean;
   data: ProfileData;
   revalidateProfileData: () => {};
 };
 
 export const EditSpouseDetails = ({
   isMobile,
+  isNewProfile,
   data,
   revalidateProfileData,
 }: EditSpouseDetailsProps) => {
@@ -55,12 +57,16 @@ export const EditSpouseDetails = ({
         spouseFirstName: formData.spouseFirstName,
         spouseLastName: formData.spouseLastName,
       };
-      await axios.put('https://bambino-api.budigunawan.com/profile', payload, {
+
+      await axios({
+        method: isNewProfile ? 'post' : 'put',
+        url: 'https://bambino-api.budigunawan.com/profile',
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${cookies.token}`,
           'Content-Type': 'application/json',
         },
+        data: payload,
       });
 
       toaster.create({

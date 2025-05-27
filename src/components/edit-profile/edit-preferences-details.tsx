@@ -22,12 +22,14 @@ type PreferencesDetailsForm = {
 
 type EditPreferencesDetailsProps = {
   isMobile?: boolean;
+  isNewProfile: boolean;
   data: ProfileData;
   revalidateProfileData: () => {};
 };
 
 export const EditPreferencesDetails = ({
   isMobile,
+  isNewProfile,
   data,
   revalidateProfileData,
 }: EditPreferencesDetailsProps) => {
@@ -74,18 +76,21 @@ export const EditPreferencesDetails = ({
       const { userId, user, ...payloadDefaultValue } = data;
       const payload = {
         ...payloadDefaultValue,
-        hobbies: formData.hobbies.map((hobby) => hobby.value),
-        sports: formData.sports.map((sport) => sport.value),
-        musics: formData.musics.map((music) => music.value),
-        movies: formData.movies.map((movie) => movie.value),
+        hobbies: formData.hobbies?.map((hobby) => hobby.value),
+        sports: formData.sports?.map((sport) => sport.value),
+        musics: formData.musics?.map((music) => music.value),
+        movies: formData.movies?.map((movie) => movie.value),
       };
 
-      await axios.put('https://bambino-api.budigunawan.com/profile', payload, {
+      await axios({
+        method: isNewProfile ? 'post' : 'put',
+        url: 'https://bambino-api.budigunawan.com/profile',
         headers: {
           Accept: 'application/json',
           Authorization: `Bearer ${cookies.token}`,
           'Content-Type': 'application/json',
         },
+        data: payload,
       });
 
       toaster.create({
@@ -112,25 +117,33 @@ export const EditPreferencesDetails = ({
     if (data) {
       reset({
         hobbies:
-          data?.hobbies?.map((hobby) => ({
-            value: hobby,
-            label: hobby,
-          })) || [],
+          data?.hobbies?.length > 0
+            ? data?.hobbies?.map((hobby) => ({
+                value: hobby,
+                label: hobby,
+              }))
+            : [],
         sports:
-          data?.sports?.map((sport) => ({
-            value: sport,
-            label: sport,
-          })) || [],
+          data?.sports?.length > 0
+            ? data?.sports?.map((sport) => ({
+                value: sport,
+                label: sport,
+              }))
+            : [],
         musics:
-          data?.musics?.map((music) => ({
-            value: music,
-            label: music,
-          })) || [],
+          data?.musics?.length > 0
+            ? data?.musics?.map((music) => ({
+                value: music,
+                label: music,
+              }))
+            : [],
         movies:
-          data?.movies?.map((movie) => ({
-            value: movie,
-            label: movie,
-          })) || [],
+          data?.movies?.length > 0
+            ? data?.movies?.map((movie) => ({
+                value: movie,
+                label: movie,
+              }))
+            : [],
       });
     }
   }, [data, reset]);

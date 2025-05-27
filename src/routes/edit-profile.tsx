@@ -26,6 +26,7 @@ export const EditProfile = () => {
   const [profileData, setProfileData] = useState<ProfileData>(
     profileDataDefaultValue
   );
+  const [isNewProfile, setIsNewProfile] = useState(false);
 
   const fetchProfileData = async () => {
     try {
@@ -45,6 +46,7 @@ export const EditProfile = () => {
           musics: data.profile?.musics.split(', ') ?? [],
           movies: data.profile?.movies.split(', ') ?? [],
         });
+        setIsNewProfile(false);
       } else {
         const response = await fetch(
           'https://bambino-api.budigunawan.com/auth/me',
@@ -64,6 +66,7 @@ export const EditProfile = () => {
             username: userData.username,
           },
         });
+        setIsNewProfile(true);
       }
     } catch (err) {
       console.error(err);
@@ -77,6 +80,7 @@ export const EditProfile = () => {
       content: (
         <EditBasicDetails
           isMobile={isMobile}
+          isNewProfile={isNewProfile}
           data={profileData}
           revalidateProfileData={fetchProfileData}
         />
@@ -88,6 +92,7 @@ export const EditProfile = () => {
       content: (
         <EditAdditionalDetails
           isMobile={isMobile}
+          isNewProfile={isNewProfile}
           data={profileData}
           revalidateProfileData={fetchProfileData}
         />
@@ -99,6 +104,7 @@ export const EditProfile = () => {
       content: (
         <EditSpouseDetails
           isMobile={isMobile}
+          isNewProfile={isNewProfile}
           data={profileData}
           revalidateProfileData={fetchProfileData}
         />
@@ -109,6 +115,8 @@ export const EditProfile = () => {
       value: 'preferences',
       content: (
         <EditPreferencesDetails
+          isMobile={isMobile}
+          isNewProfile={isNewProfile}
           data={profileData}
           revalidateProfileData={fetchProfileData}
         />
