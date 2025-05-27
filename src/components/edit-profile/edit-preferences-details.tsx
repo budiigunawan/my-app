@@ -34,9 +34,7 @@ export const EditPreferencesDetails = ({
   const [cookies] = useCookies(['token']);
   const [isLoading, setIsLoading] = useState(false);
   const {
-    register,
     handleSubmit,
-    watch,
     formState: { errors },
     control,
     reset,
