@@ -1,12 +1,22 @@
-import { Flex, Stack, Field, Input, Box } from '@chakra-ui/react';
+import {
+  Flex,
+  Stack,
+  Field,
+  Input,
+  Box,
+  Button,
+  HStack,
+} from '@chakra-ui/react';
 import { IoPersonSharp } from 'react-icons/io5';
 import { ImageUpload } from './image-upload';
-// import { Toaster, toaster } from '../ui/toaster';
-// import axios from 'axios';
+import { Toaster, toaster } from '../ui/toaster';
+import axios from 'axios';
 import { useForm, Controller } from 'react-hook-form';
 import type { ProfileData } from '@/lib/types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router';
 import Select from 'react-select';
+import { useCookies } from 'react-cookie';
 
 type BasicDetailsForm = {
   salutation: {
@@ -21,16 +31,28 @@ type BasicDetailsForm = {
 type EditBasicDetailsProps = {
   isMobile?: boolean;
   data: ProfileData;
+  fetchProfileData: () => {};
 };
 
-export const EditBasicDetails = ({ isMobile, data }: EditBasicDetailsProps) => {
+export const EditBasicDetails = ({
+  isMobile,
+  data,
+  fetchProfileData,
+}: EditBasicDetailsProps) => {
+  const [cookies] = useCookies(['token']);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
     control,
     reset,
   } = useForm<BasicDetailsForm>();
+  const salutation = watch('salutation');
+  const firstName = watch('firstName');
+  const lastName = watch('lastName');
+  const email = watch('email');
 
   const options = [
     { value: 'Mr.', label: 'Mr.' },
@@ -38,15 +60,52 @@ export const EditBasicDetails = ({ isMobile, data }: EditBasicDetailsProps) => {
     { value: 'Mrs.', label: 'Mrs.' },
   ];
 
-  const onSubmit = (formData: BasicDetailsForm) => {
-    // Call your API here using axios or fetch
-    console.log('Submitted Data:', formData);
+  const onSubmit = async (formData: BasicDetailsForm) => {
+    try {
+      setIsLoading(true);
+
+      const { userId, user, ...payloadDefaultValue } = data;
+      const payload = {
+        ...payloadDefaultValue,
+        salutation: formData.salutation.value,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+      };
+      await axios.put('https://bambino-api.budigunawan.com/profile', payload, {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${cookies.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      toaster.create({
+        title: 'Basic details edited',
+        type: 'success',
+        onStatusChange({ status }) {
+          if (status === 'unmounted') {
+            fetchProfileData();
+          }
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      toaster.create({
+        title: 'Edit basic details failed',
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     if (data) {
       reset({
-        salutation: { value: data.salutation, label: data.salutation },
+        salutation: {
+          value: data.salutation ?? 'Mr.',
+          label: data.salutation ?? 'Mr.',
+        },
         firstName: data.firstName || '',
         lastName: data.lastName || '',
         email: data.user.email,
@@ -54,89 +113,116 @@ export const EditBasicDetails = ({ isMobile, data }: EditBasicDetailsProps) => {
     }
   }, [data, reset]);
 
-  console.log(data?.firstName, 'd');
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Flex
-        gap={isMobile ? '20px' : '40px'}
-        flexDirection={isMobile ? 'column' : 'row'}
-        p={isMobile ? '16px' : 0}
-      >
-        <Box>
-          <IoPersonSharp size={'8em'} />
-          <ImageUpload />
-        </Box>
-        <Stack width={'50%'}>
-          <Field.Root invalid={!!errors.salutation} required>
-            <Field.Label fontWeight={'bold'}>
-              Salutation <Field.RequiredIndicator color={'black'} />
-            </Field.Label>
-            <Box width={'100%'}>
-              <Controller
-                control={control}
-                name="salutation"
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    options={options}
-                    onChange={(val) => field.onChange(val)}
-                    value={field.value}
-                    theme={(theme) => ({
-                      ...theme,
-                      borderRadius: 0,
-                      colors: {
-                        ...theme.colors,
-                        primary25: '#D0D0D0',
-                        primary: 'black',
-                      },
-                    })}
-                    styles={{
-                      control: (baseStyles, state) => ({
-                        ...baseStyles,
-                        backgroundColor: 'rgba(208,208,208,0.3)',
-                        border: '1px solid black',
-                        color: 'black',
-                      }),
-                    }}
-                  />
-                )}
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Flex
+          gap={isMobile ? '20px' : '40px'}
+          flexDirection={isMobile ? 'column' : 'row'}
+          p={isMobile ? '16px' : 0}
+        >
+          <Box>
+            <IoPersonSharp size={'8em'} />
+            <ImageUpload />
+          </Box>
+          <Stack width={'50%'}>
+            <Field.Root invalid={!!errors.salutation} required>
+              <Field.Label fontWeight={'bold'}>
+                Salutation <Field.RequiredIndicator color={'black'} />
+              </Field.Label>
+              <Box width={'100%'}>
+                <Controller
+                  control={control}
+                  name="salutation"
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={options}
+                      onChange={(val) => field.onChange(val)}
+                      value={field.value}
+                      theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 0,
+                        colors: {
+                          ...theme.colors,
+                          primary25: '#D0D0D0',
+                          primary: 'black',
+                        },
+                      })}
+                      styles={{
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          backgroundColor: 'rgba(208,208,208,0.3)',
+                          border: '1px solid black',
+                          color: 'black',
+                        }),
+                      }}
+                    />
+                  )}
+                />
+              </Box>
+            </Field.Root>
+            <Field.Root invalid={!!errors.firstName} required>
+              <Field.Label fontWeight={'bold'}>
+                First name <Field.RequiredIndicator color={'black'} />
+              </Field.Label>
+              <Input
+                {...register('firstName', {
+                  required: 'First name is required',
+                })}
+                border={'1px solid black'}
+                backgroundColor={'rgba(208,208,208,0.3)'}
+                borderRadius={0}
               />
-            </Box>
-          </Field.Root>
-          <Field.Root invalid={!!errors.firstName} required>
-            <Field.Label fontWeight={'bold'}>
-              First name <Field.RequiredIndicator color={'black'} />
-            </Field.Label>
-            <Input
-              {...register('firstName', { required: 'First name is required' })}
-              border={'1px solid black'}
-              backgroundColor={'rgba(208,208,208,0.3)'}
-            />
-          </Field.Root>
-          <Field.Root invalid={!!errors.lastName} required>
-            <Field.Label fontWeight={'bold'}>
-              Last name <Field.RequiredIndicator color={'black'} />
-            </Field.Label>
-            <Input
-              {...register('lastName', { required: 'Last name is required' })}
-              border={'1px solid black'}
-              backgroundColor={'rgba(208,208,208,0.3)'}
-            />
-          </Field.Root>
-          <Field.Root required>
-            <Field.Label fontWeight={'bold'}>
-              Email address <Field.RequiredIndicator color={'black'} />
-            </Field.Label>
-            <Input
-              {...register('email')}
-              border={'1px solid black'}
-              backgroundColor={'rgba(208,208,208,0.3)'}
-              disabled
-            />
-          </Field.Root>
-        </Stack>
-      </Flex>
-    </form>
+            </Field.Root>
+            <Field.Root invalid={!!errors.lastName} required>
+              <Field.Label fontWeight={'bold'}>
+                Last name <Field.RequiredIndicator color={'black'} />
+              </Field.Label>
+              <Input
+                {...register('lastName', { required: 'Last name is required' })}
+                border={'1px solid black'}
+                backgroundColor={'rgba(208,208,208,0.3)'}
+                borderRadius={0}
+              />
+            </Field.Root>
+            <Field.Root required>
+              <Field.Label fontWeight={'bold'}>
+                Email address <Field.RequiredIndicator color={'black'} />
+              </Field.Label>
+              <Input
+                {...register('email')}
+                border={'1px solid black'}
+                backgroundColor={'rgba(208,208,208,0.3)'}
+                borderRadius={0}
+                disabled
+              />
+            </Field.Root>
+
+            <HStack mt={'24px'}>
+              <Button
+                width={'50%'}
+                borderRadius={0}
+                type="submit"
+                loading={isLoading}
+                disabled={!salutation || !firstName || !lastName || !email}
+              >
+                {`Save & Update`}
+              </Button>
+              <Button
+                width={'50%'}
+                borderRadius={0}
+                variant={'outline'}
+                border={'1px solid black'}
+                asChild
+              >
+                <Link to={'/my-profile'}>Cancel</Link>
+              </Button>
+            </HStack>
+          </Stack>
+        </Flex>
+      </form>
+      <Toaster />
+    </>
   );
 };

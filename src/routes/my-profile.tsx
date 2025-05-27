@@ -62,7 +62,13 @@ export const MyProfile = () => {
         const data = await res.json();
 
         if (data.profile) {
-          setProfileData(data.profile);
+          setProfileData({
+            ...data.profile,
+            hobbies: data.profile?.hobbies.split(', ') ?? [],
+            sports: data.profile?.sports.split(', ') ?? [],
+            musics: data.profile?.musics.split(', ') ?? [],
+            movies: data.profile?.hobbies.split(', ') ?? [],
+          });
         } else {
           const response = await fetch(
             'https://bambino-api.budigunawan.com/auth/me',

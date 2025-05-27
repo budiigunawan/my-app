@@ -34,11 +34,60 @@ export const EditProfile = () => {
     selectedMovies: ['Spiderman 1', 'Spiderman 2', 'Spiderman 3'],
   };
 
+  const fetchProfileData = async () => {
+    try {
+      const res = await fetch('https://bambino-api.budigunawan.com/profile', {
+        headers: {
+          Authorization: `Bearer ${cookies.token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (data.profile) {
+        setProfileData({
+          ...data.profile,
+          hobbies: data.profile?.hobbies.split(', ') ?? [],
+          sports: data.profile?.sports.split(', ') ?? [],
+          musics: data.profile?.musics.split(', ') ?? [],
+          movies: data.profile?.hobbies.split(', ') ?? [],
+        });
+      } else {
+        const response = await fetch(
+          'https://bambino-api.budigunawan.com/auth/me',
+          {
+            headers: {
+              Authorization: `Bearer ${cookies.token}`,
+            },
+          }
+        );
+
+        const authData = await response.json();
+        const userData = authData.user;
+        setProfileData({
+          ...profileData,
+          user: {
+            email: userData.email,
+            username: userData.username,
+          },
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const tabsList = [
     {
       title: 'Basic',
       value: 'basic',
-      content: <EditBasicDetails isMobile={isMobile} data={profileData} />,
+      content: (
+        <EditBasicDetails
+          isMobile={isMobile}
+          data={profileData}
+          fetchProfileData={fetchProfileData}
+        />
+      ),
     },
     {
       title: 'Additional Details',
@@ -60,43 +109,6 @@ export const EditProfile = () => {
   ];
 
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const res = await fetch('https://bambino-api.budigunawan.com/profile', {
-          headers: {
-            Authorization: `Bearer ${cookies.token}`,
-          },
-        });
-
-        const data = await res.json();
-
-        if (data.profile) {
-          setProfileData(data.profile);
-        } else {
-          const response = await fetch(
-            'https://bambino-api.budigunawan.com/auth/me',
-            {
-              headers: {
-                Authorization: `Bearer ${cookies.token}`,
-              },
-            }
-          );
-
-          const authData = await response.json();
-          const userData = authData.user;
-          setProfileData({
-            ...profileData,
-            user: {
-              email: userData.email,
-              username: userData.username,
-            },
-          });
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
     fetchProfileData();
   }, [cookies.token]);
 
@@ -105,7 +117,7 @@ export const EditProfile = () => {
       <Stack alignItems={'flex-end'}>
         <HStack alignItems={'baseline'} width={'70%'}>
           <Text flexShrink={'1'} fontSize={'4xl'}>
-            My
+            Edit
             <Text as={'span'} fontWeight={'bold'}>
               {' Profile'}
             </Text>

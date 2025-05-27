@@ -10,8 +10,6 @@ export const AdditionalDetails = ({
   isMobile,
   data,
 }: AdditionalDetailsProps) => {
-  console.log(data.dateOfBirth, 'dob');
-
   return (
     <Stack p={isMobile ? '16px' : 0}>
       <Field.Root required>

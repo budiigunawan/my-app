@@ -1,6 +1,5 @@
 import type { ProfileData } from '@/lib/types';
 import { Stack, Field, Badge, Wrap } from '@chakra-ui/react';
-import { useMemo } from 'react';
 
 type PreferencesDetailsProps = {
   isMobile?: boolean;
@@ -11,44 +10,12 @@ export const PreferencesDetails = ({
   isMobile,
   data,
 }: PreferencesDetailsProps) => {
-  const selectedHobbies: string[] = useMemo(() => {
-    if (data.hobbies) {
-      return data.hobbies.split(', ');
-    }
-
-    return [];
-  }, [data.hobbies]);
-
-  const selectedSports: string[] = useMemo(() => {
-    if (data.sports) {
-      return data.sports.split(', ');
-    }
-
-    return [];
-  }, [data.sports]);
-
-  const selectedMusicGenres: string[] = useMemo(() => {
-    if (data.musics) {
-      return data.musics.split(', ');
-    }
-
-    return [];
-  }, [data.musics]);
-
-  const selectedMovies: string[] = useMemo(() => {
-    if (data.movies) {
-      return data.movies.split(', ');
-    }
-
-    return [];
-  }, [data.movies]);
-
   return (
     <Stack p={isMobile ? '16px' : 0}>
       <Field.Root mt={2}>
         <Field.Label fontWeight={'bold'}>Hobbies and interests</Field.Label>
         <Wrap gap={'2'}>
-          {selectedHobbies.map((hobby) => (
+          {data.hobbies.map((hobby) => (
             <Badge key={hobby}>{hobby}</Badge>
           ))}
         </Wrap>
@@ -56,7 +23,7 @@ export const PreferencesDetails = ({
       <Field.Root mt={2}>
         <Field.Label fontWeight={'bold'}>{`Favorite sport(s)`}</Field.Label>
         <Wrap gap={'2'}>
-          {selectedSports.map((sport) => (
+          {data.sports.map((sport) => (
             <Badge key={sport}>{sport}</Badge>
           ))}
         </Wrap>
@@ -66,7 +33,7 @@ export const PreferencesDetails = ({
           fontWeight={'bold'}
         >{`Preferred music genre(s)`}</Field.Label>
         <Wrap gap={'2'}>
-          {selectedMusicGenres.map((music) => (
+          {data.musics.map((music) => (
             <Badge key={music}>{music}</Badge>
           ))}
         </Wrap>
@@ -76,7 +43,7 @@ export const PreferencesDetails = ({
           fontWeight={'bold'}
         >{`Preferred movie/TV show(s)`}</Field.Label>
         <Wrap gap={'2'}>
-          {selectedMovies.map((movie) => (
+          {data.movies.map((movie) => (
             <Badge key={movie}>{movie}</Badge>
           ))}
         </Wrap>

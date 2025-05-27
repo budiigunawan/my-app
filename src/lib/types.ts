@@ -12,10 +12,10 @@ export type ProfileData = {
   spouseSalutation: string;
   spouseFirstName: string;
   spouseLastName: string;
-  hobbies: string;
-  sports: string;
-  musics: string;
-  movies: string;
+  hobbies: string[];
+  sports: string[];
+  musics: string[];
+  movies: string[];
   userId: string;
   user: {
     email: string;
@@ -37,10 +37,10 @@ export const profileDataDefaultValue = {
   spouseSalutation: '',
   spouseFirstName: '',
   spouseLastName: '',
-  hobbies: '',
-  sports: '',
-  musics: '',
-  movies: '',
+  hobbies: [],
+  sports: [],
+  musics: [],
+  movies: [],
   userId: '',
   user: {
     email: '',
