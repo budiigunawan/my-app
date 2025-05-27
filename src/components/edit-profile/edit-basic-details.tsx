@@ -31,13 +31,13 @@ type BasicDetailsForm = {
 type EditBasicDetailsProps = {
   isMobile?: boolean;
   data: ProfileData;
-  fetchProfileData: () => {};
+  revalidateProfileData: () => {};
 };
 
 export const EditBasicDetails = ({
   isMobile,
   data,
-  fetchProfileData,
+  revalidateProfileData,
 }: EditBasicDetailsProps) => {
   const [cookies] = useCookies(['token']);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +54,7 @@ export const EditBasicDetails = ({
   const lastName = watch('lastName');
   const email = watch('email');
 
-  const options = [
+  const salutationOptions = [
     { value: 'Mr.', label: 'Mr.' },
     { value: 'Ms.', label: 'Ms.' },
     { value: 'Mrs.', label: 'Mrs.' },
@@ -84,7 +84,7 @@ export const EditBasicDetails = ({
         type: 'success',
         onStatusChange({ status }) {
           if (status === 'unmounted') {
-            fetchProfileData();
+            revalidateProfileData();
           }
         },
       });
@@ -103,8 +103,8 @@ export const EditBasicDetails = ({
     if (data) {
       reset({
         salutation: {
-          value: data.salutation ?? 'Mr.',
-          label: data.salutation ?? 'Mr.',
+          value: data.salutation ?? '',
+          label: data.salutation ?? '',
         },
         firstName: data.firstName || '',
         lastName: data.lastName || '',
@@ -130,14 +130,14 @@ export const EditBasicDetails = ({
               <Field.Label fontWeight={'bold'}>
                 Salutation <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <Box width={'100%'}>
+              <Flex flexDirection={'column'} width={'100%'}>
                 <Controller
                   control={control}
                   name="salutation"
                   render={({ field }) => (
                     <Select
                       {...field}
-                      options={options}
+                      options={salutationOptions}
                       onChange={(val) => field.onChange(val)}
                       value={field.value}
                       theme={(theme) => ({
@@ -150,7 +150,7 @@ export const EditBasicDetails = ({
                         },
                       })}
                       styles={{
-                        control: (baseStyles, state) => ({
+                        control: (baseStyles) => ({
                           ...baseStyles,
                           backgroundColor: 'rgba(208,208,208,0.3)',
                           border: '1px solid black',
@@ -160,31 +160,54 @@ export const EditBasicDetails = ({
                     />
                   )}
                 />
-              </Box>
+                <Field.ErrorText mt={1}>
+                  {errors.salutation?.message}
+                </Field.ErrorText>
+              </Flex>
             </Field.Root>
             <Field.Root invalid={!!errors.firstName} required>
               <Field.Label fontWeight={'bold'}>
                 First name <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <Input
-                {...register('firstName', {
-                  required: 'First name is required',
-                })}
-                border={'1px solid black'}
-                backgroundColor={'rgba(208,208,208,0.3)'}
-                borderRadius={0}
-              />
+              <Flex flexDirection={'column'} width={'100%'}>
+                <Input
+                  {...register('firstName', {
+                    required: 'First name is required',
+                    minLength: {
+                      value: 2,
+                      message: 'First name must be at least 2 characters',
+                    },
+                  })}
+                  border={'1px solid black'}
+                  backgroundColor={'rgba(208,208,208,0.3)'}
+                  borderRadius={0}
+                />
+                <Field.ErrorText mt={1}>
+                  {errors.firstName?.message}
+                </Field.ErrorText>
+              </Flex>
             </Field.Root>
             <Field.Root invalid={!!errors.lastName} required>
               <Field.Label fontWeight={'bold'}>
                 Last name <Field.RequiredIndicator color={'black'} />
               </Field.Label>
-              <Input
-                {...register('lastName', { required: 'Last name is required' })}
-                border={'1px solid black'}
-                backgroundColor={'rgba(208,208,208,0.3)'}
-                borderRadius={0}
-              />
+              <Flex flexDirection={'column'} width={'100%'}>
+                <Input
+                  {...register('lastName', {
+                    required: 'Last name is required',
+                    minLength: {
+                      value: 2,
+                      message: 'Last name must be at least 2 characters',
+                    },
+                  })}
+                  border={'1px solid black'}
+                  backgroundColor={'rgba(208,208,208,0.3)'}
+                  borderRadius={0}
+                />
+                <Field.ErrorText mt={1}>
+                  {errors.lastName?.message}
+                </Field.ErrorText>
+              </Flex>
             </Field.Root>
             <Field.Root required>
               <Field.Label fontWeight={'bold'}>

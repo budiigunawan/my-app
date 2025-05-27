@@ -85,14 +85,20 @@ export const EditProfile = () => {
         <EditBasicDetails
           isMobile={isMobile}
           data={profileData}
-          fetchProfileData={fetchProfileData}
+          revalidateProfileData={fetchProfileData}
         />
       ),
     },
     {
       title: 'Additional Details',
       value: 'additional',
-      content: <EditAdditionalDetails isMobile={isMobile} />,
+      content: (
+        <EditAdditionalDetails
+          isMobile={isMobile}
+          data={profileData}
+          revalidateProfileData={fetchProfileData}
+        />
+      ),
     },
     {
       title: 'Spouse Details',
