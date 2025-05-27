@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import Select from 'react-select';
 import { useCookies } from 'react-cookie';
-import { email } from 'zod/v4';
 
 type SpouseDetailsForm = {
   spouseSalutation: {
@@ -34,7 +33,6 @@ export const EditSpouseDetails = ({
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
     control,
     reset,
