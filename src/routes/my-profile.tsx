@@ -67,7 +67,7 @@ export const MyProfile = () => {
             hobbies: data.profile?.hobbies.split(', ') ?? [],
             sports: data.profile?.sports.split(', ') ?? [],
             musics: data.profile?.musics.split(', ') ?? [],
-            movies: data.profile?.hobbies.split(', ') ?? [],
+            movies: data.profile?.movies.split(', ') ?? [],
           });
         } else {
           const response = await fetch(

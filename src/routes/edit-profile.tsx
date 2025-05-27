@@ -27,13 +27,6 @@ export const EditProfile = () => {
     profileDataDefaultValue
   );
 
-  const preferencesData = {
-    selectedHobbies: ['Traveling', 'Reading'],
-    selectedSports: ['Badminton', 'Football'],
-    selectedMusicGenres: ['Pop', 'Jazz', 'Rock'],
-    selectedMovies: ['Spiderman 1', 'Spiderman 2', 'Spiderman 3'],
-  };
-
   const fetchProfileData = async () => {
     try {
       const res = await fetch('https://bambino-api.budigunawan.com/profile', {
@@ -50,7 +43,7 @@ export const EditProfile = () => {
           hobbies: data.profile?.hobbies.split(', ') ?? [],
           sports: data.profile?.sports.split(', ') ?? [],
           musics: data.profile?.musics.split(', ') ?? [],
-          movies: data.profile?.hobbies.split(', ') ?? [],
+          movies: data.profile?.movies.split(', ') ?? [],
         });
       } else {
         const response = await fetch(
@@ -115,7 +108,10 @@ export const EditProfile = () => {
       title: 'Personal Preferences',
       value: 'preferences',
       content: (
-        <EditPreferencesDetails data={preferencesData} isMobile={isMobile} />
+        <EditPreferencesDetails
+          data={profileData}
+          revalidateProfileData={fetchProfileData}
+        />
       ),
     },
   ];
