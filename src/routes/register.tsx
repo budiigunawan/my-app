@@ -15,8 +15,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiShow, BiHide } from 'react-icons/bi';
-import { useNavigate } from 'react-router';
-import { Link } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 
 type RegisterForm = {
   username: string;

@@ -22,3 +22,28 @@ export type ProfileData = {
     username: string;
   };
 };
+
+export const profileDataDefaultValue = {
+  id: '',
+  salutation: '',
+  firstName: '',
+  lastName: '',
+  address: '',
+  country: '',
+  postalCode: '',
+  dateOfBirth: '',
+  gender: '',
+  maritalStatus: '',
+  spouseSalutation: '',
+  spouseFirstName: '',
+  spouseLastName: '',
+  hobbies: '',
+  sports: '',
+  musics: '',
+  movies: '',
+  userId: '',
+  user: {
+    email: '',
+    username: '',
+  },
+};

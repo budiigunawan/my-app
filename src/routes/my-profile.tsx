@@ -4,7 +4,7 @@ import {
   PreferencesDetails,
   SpouseDetails,
 } from '@/components/my-profile';
-import type { ProfileData } from '@/lib/types';
+import { profileDataDefaultValue, type ProfileData } from '@/lib/types';
 import {
   Box,
   HStack,
@@ -20,35 +20,12 @@ import { useCookies } from 'react-cookie';
 import { RiBallPenFill } from 'react-icons/ri';
 import { Link } from 'react-router';
 
-const defaultValue = {
-  id: '',
-  salutation: '',
-  firstName: '',
-  lastName: '',
-  address: '',
-  country: '',
-  postalCode: '',
-  dateOfBirth: '',
-  gender: '',
-  maritalStatus: '',
-  spouseSalutation: '',
-  spouseFirstName: '',
-  spouseLastName: '',
-  hobbies: '',
-  sports: '',
-  musics: '',
-  movies: '',
-  userId: '',
-  user: {
-    email: '',
-    username: '',
-  },
-};
-
 export const MyProfile = () => {
   const [cookies] = useCookies(['token']);
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const [profileData, setProfileData] = useState<ProfileData>(defaultValue);
+  const [profileData, setProfileData] = useState<ProfileData>(
+    profileDataDefaultValue
+  );
 
   const tabsList = [
     {

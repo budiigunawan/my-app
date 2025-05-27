@@ -4,6 +4,7 @@ import {
   EditSpouseDetails,
 } from '@/components/edit-profile';
 import { EditPreferencesDetails } from '@/components/edit-profile/edit-preferences-details';
+import { type ProfileData, profileDataDefaultValue } from '@/lib/types';
 import {
   Box,
   HStack,
@@ -14,12 +15,18 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { IoChevronBack } from 'react-icons/io5';
 import { Link } from 'react-router';
 
 export const EditProfile = () => {
+  const [cookies] = useCookies(['token']);
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const [profileData, setProfileData] = useState<ProfileData>(
+    profileDataDefaultValue
+  );
+
   const preferencesData = {
     selectedHobbies: ['Traveling', 'Reading'],
     selectedSports: ['Badminton', 'Football'],
@@ -31,7 +38,7 @@ export const EditProfile = () => {
     {
       title: 'Basic',
       value: 'basic',
-      content: <EditBasicDetails isMobile={isMobile} />,
+      content: <EditBasicDetails isMobile={isMobile} data={profileData} />,
     },
     {
       title: 'Additional Details',
@@ -51,6 +58,47 @@ export const EditProfile = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const res = await fetch('https://bambino-api.budigunawan.com/profile', {
+          headers: {
+            Authorization: `Bearer ${cookies.token}`,
+          },
+        });
+
+        const data = await res.json();
+
+        if (data.profile) {
+          setProfileData(data.profile);
+        } else {
+          const response = await fetch(
+            'https://bambino-api.budigunawan.com/auth/me',
+            {
+              headers: {
+                Authorization: `Bearer ${cookies.token}`,
+              },
+            }
+          );
+
+          const authData = await response.json();
+          const userData = authData.user;
+          setProfileData({
+            ...profileData,
+            user: {
+              email: userData.email,
+              username: userData.username,
+            },
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchProfileData();
+  }, [cookies.token]);
 
   return (
     <Box as={'section'} pt={'80px'}>
@@ -105,7 +153,12 @@ export const EditProfile = () => {
           <Separator />
         </Tabs.List>
         {tabsList.map((tabs) => (
-          <Tabs.Content p={0} value={tabs.value} key={`${tabs.value}-content`}>
+          <Tabs.Content
+            p={0}
+            value={tabs.value}
+            key={`${tabs.value}-content`}
+            width={isMobile ? '100%' : '75%'}
+          >
             {tabs.content}
           </Tabs.Content>
         ))}
