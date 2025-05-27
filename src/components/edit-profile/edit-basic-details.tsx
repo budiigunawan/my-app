@@ -82,6 +82,15 @@ export const EditBasicDetails = ({ isMobile, data }: EditBasicDetailsProps) => {
                     options={options}
                     onChange={(val) => field.onChange(val)}
                     value={field.value}
+                    theme={(theme) => ({
+                      ...theme,
+                      borderRadius: 0,
+                      colors: {
+                        ...theme.colors,
+                        primary25: '#D0D0D0',
+                        primary: 'black',
+                      },
+                    })}
                     styles={{
                       control: (baseStyles, state) => ({
                         ...baseStyles,
@@ -102,6 +111,7 @@ export const EditBasicDetails = ({ isMobile, data }: EditBasicDetailsProps) => {
             <Input
               {...register('firstName', { required: 'First name is required' })}
               border={'1px solid black'}
+              backgroundColor={'rgba(208,208,208,0.3)'}
             />
           </Field.Root>
           <Field.Root invalid={!!errors.lastName} required>
@@ -111,13 +121,19 @@ export const EditBasicDetails = ({ isMobile, data }: EditBasicDetailsProps) => {
             <Input
               {...register('lastName', { required: 'Last name is required' })}
               border={'1px solid black'}
+              backgroundColor={'rgba(208,208,208,0.3)'}
             />
           </Field.Root>
           <Field.Root required>
             <Field.Label fontWeight={'bold'}>
               Email address <Field.RequiredIndicator color={'black'} />
             </Field.Label>
-            <Input {...register('email')} border={'1px solid black'} disabled />
+            <Input
+              {...register('email')}
+              border={'1px solid black'}
+              backgroundColor={'rgba(208,208,208,0.3)'}
+              disabled
+            />
           </Field.Root>
         </Stack>
       </Flex>
