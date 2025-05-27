@@ -133,6 +133,7 @@ export const EditBasicDetails = ({
               <Flex flexDirection={'column'} width={'100%'}>
                 <Controller
                   control={control}
+                  rules={{ required: 'Salutation is required' }}
                   name="salutation"
                   render={({ field }) => (
                     <Select

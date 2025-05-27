@@ -103,7 +103,13 @@ export const EditProfile = () => {
     {
       title: 'Spouse Details',
       value: 'spouse',
-      content: <EditSpouseDetails isMobile={isMobile} />,
+      content: (
+        <EditSpouseDetails
+          isMobile={isMobile}
+          data={profileData}
+          revalidateProfileData={fetchProfileData}
+        />
+      ),
     },
     {
       title: 'Personal Preferences',
