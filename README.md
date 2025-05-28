@@ -5,6 +5,7 @@
 This project is a solution to the Slicing Exercise V4.
 
 - production link: <https://convertium.budigunawan.com>
+- demo: <https://jam.dev/c/69f0337c-1bd2-48a9-876d-6b7c957a0820>
 
 ## Tech Stack
 
