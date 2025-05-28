@@ -130,9 +130,9 @@ export const EditProfile = () => {
 
   return (
     <Box as={'section'} pt={'80px'}>
-      <Stack alignItems={'flex-end'}>
-        <HStack alignItems={'baseline'} width={'70%'}>
-          <Text flexShrink={'1'} fontSize={'4xl'}>
+      <Stack alignItems={'flex-end'} px={{ base: '16px', md: 0 }}>
+        <HStack alignItems={'baseline'} width={{ base: '100%', md: '70%' }}>
+          <Text flexShrink={'1'} fontSize={{ base: '2xl', md: '4xl' }}>
             Edit
             <Text as={'span'} fontWeight={'bold'}>
               {' Profile'}
@@ -158,7 +158,7 @@ export const EditProfile = () => {
         variant="plain"
         gap={isMobile ? '0' : '5%'}
       >
-        <Tabs.List width={isMobile ? '100%' : '25%'}>
+        <Tabs.List width={isMobile ? '100%' : '25%'} p={isMobile ? 4 : 0}>
           <Separator />
           {tabsList.map((tabs) => (
             <React.Fragment key={tabs.value}>

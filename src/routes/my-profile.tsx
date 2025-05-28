@@ -99,9 +99,9 @@ export const MyProfile = () => {
 
   return (
     <Box as={'section'} pt={'80px'}>
-      <Stack alignItems={'flex-end'}>
-        <HStack alignItems={'baseline'} width={'70%'}>
-          <Text flexShrink={'1'} fontSize={'4xl'}>
+      <Stack alignItems={'flex-end'} px={{ base: '16px', md: 0 }}>
+        <HStack alignItems={'baseline'} width={{ base: '100%', md: '70%' }}>
+          <Text flexShrink={'1'} fontSize={{ base: '2xl', md: '4xl' }}>
             My
             <Text as={'span'} fontWeight={'bold'}>
               {' Profile'}

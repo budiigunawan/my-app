@@ -127,11 +127,11 @@ export const EditBasicDetails = ({
           flexDirection={isMobile ? 'column' : 'row'}
           p={isMobile ? '16px' : 0}
         >
-          <Box>
+          <Box margin={{ base: '0 auto', md: 0 }}>
             <IoPersonSharp size={'8em'} />
             <ImageUpload />
           </Box>
-          <Stack width={'50%'}>
+          <Stack width={{ base: '100%', md: '50%' }}>
             <Field.Root invalid={!!errors.salutation} required>
               <Field.Label fontWeight={'bold'}>
                 Salutation <Field.RequiredIndicator color={'black'} />
